@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Calculator</title>
+	<link type="text/css" rel="stylesheet" href="css/style.css">
+	<link rel="shortcut icon" href="favicon.png">
+</head>
+
+<body onload=start()>
+	<!-- UI layout -->
+	<div class="calculator">
+		<div class="result">0</div>
+		<div class="keyboard">
+			<div class="panel-a">
+				<div class="top-buttons">
+					<button class="btn btn-reset primary" onClick="main.clickReset()"><span>C </span></button>
+					<button class="btn " onClick="main.clickNumber('.')"><span>.</span></button>
+				</div>
+				<div class=" numbers" id="numbers">
+					<button class="btn" onClick="main.clickNumber('9')"><span>9</span></button>
+					<button class="btn" onClick="main.clickNumber('8')"><span>8</span></button>
+					<button class="btn" onClick="main.clickNumber('7')"><span>7</span></button>
+					<button class="btn" onClick="main.clickNumber('6')"><span>6</span></button>
+					<button class="btn" onClick="main.clickNumber('5')"><span>5</span></button>
+					<button class="btn" onClick="main.clickNumber('4')"><span>4</span></button>
+					<button class="btn" onClick="main.clickNumber('3')"><span>3</span></button>
+					<button class="btn" onClick="main.clickNumber('2')"><span>2</span></button>
+					<button class="btn" onClick="main.clickNumber('1')"><span>1</span></button>
+					<button class="btn" onClick="main.clickNumber('0')"><span>0</span></button>
+				</div>
+			</div>
+			<div class="panel-b" id="panel-b">
+				<button class="btn" onClick="main.clickOpt('+')"><span>+</span></button>
+				<button class="btn" onClick="main.clickOpt('-')"><span>-</span></button>
+				<button class="btn" onClick="main.clickOpt('*')"><span>*</span></button>
+				<button class="btn" onClick="main.clickOpt('/')"><span>/</span></button>
+				<button class="btn primary" onClick="main.clickCalc()"><span>=</span></button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Connect UI actions to Go functions -->
+	<script>
+		let main = {
+			calcNum: '',
+			calcOpt: '',
+			isNewNum: true,
+			isOpt: false,
+			result: '0',
+			max_length: 6,
+			clickNumber(num) {
+				res = document.querySelector('.result');
+				this.result = this.result.toString();
+				isFloat = (num === '.');
+
+				this.isOpt = false;
+
+				if (this.result.indexOf('.') !== -1 && isFloat) {
+					return;
+				}
+
+				if (this.result.length >= this.max_length) {
+					return;
+				}
+
+				if (this.isNewNum) {
+					this.result = isFloat ? '0' + num : num;
+					this.isNewNum = false;
+				} else {
+					this.result = this.result + num;
+				}
+				res.innerHTML = this.result;
+			},
+			clickReset() {
+				res = document.querySelector('.result');
+				this.isNewNum = true;
+				this.isOpt = false;
+				this.calcNum = '';
+				res.innerHTML = this.result = '0';
+				rst();
+			},
+			clickOpt(opt) {
+				res = document.querySelector('.result');
+				if (this.isOpt) {
+					return;
+				}
+				this.isOpt = true;
+				this.isNewNum = true;
+				this.calcNum = this.calcNum + this.result;
+				this.calcOpt = opt;
+				res.innerHTML = this.result = '0';
+				calc(this.calcNum, this.calcOpt);
+				this.calcNum = '';
+			},
+			clickCalc() {
+				if (this.isOpt) {
+					return;
+				}
+				this.isOpt = true;
+				this.isNewNum = true;
+				this.calcOpt = "=";
+				this.calcNum = this.calcNum + this.result;
+				calc(this.calcNum, this.calcOpt);
+				this.calcNum = '';
+				this.result = '0';
+			}
+		}
+		calc = async (num, opt) => {
+			res = document.querySelector('.result');
+			res.innerHTML = `${await window.calculate(num, opt)}`;
+		};
+		rst = async () => {
+			await reset();
+		};
+	</script>
+</body>
+
+</html>
