@@ -1,5 +1,5 @@
 # goCalculator
-A simple calcultor in GO with lorca
+A simple calculator in GO with lorca
 
 ## Build in Windows
 .\build.bat
